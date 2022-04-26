@@ -1,21 +1,26 @@
 
 package Dev_J110;
 
+import java.util.function.Function;
 
+//Это класс, который умеет вычислять определенный интеграл
 public class IntegralCalculator {
         
-    public static double calculator(MyFunction function, double from, double to, int quantity) {
+    public static double calculator(Function<Double, Double> f, double xS, double xF, int segments) {
         
-        double lenghtInterval = Math.abs((to - from)/quantity);
-        double argumentCurrent = (from + lenghtInterval)/2;
+        if(segments > 0) {
         double integral = 0;
+        double segmentLength = (xF - xS)/segments;
+        double deltaX = segmentLength / 2;
+        double currentX = xS;
         
-        for(int i =0; i < quantity; i++) {
-        double currentIntegral = function.getValue(argumentCurrent)*lenghtInterval;
-        integral += currentIntegral;
-        argumentCurrent += lenghtInterval;
+        for(int i =0; i < segments; i++) {
+            integral += f.apply(currentX + deltaX)*segmentLength;
+            currentX += 2*deltaX;
         }
-        return integral;
+            return integral; }
+        else 
+            throw new IllegalArgumentException("Количество отрезков задано некорректно.");
     }
     
 }
